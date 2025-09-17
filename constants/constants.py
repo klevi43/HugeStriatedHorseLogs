@@ -6,12 +6,31 @@ REPORT_CODE = "cwjn231DBfRJyMmA"
 
 
 TEST_QUERY = """
-    query($code: String, $difficulty: Int){
+    query($guildName: String, $guildServerSlug: String, $difficulty: Int){
         reportData {
-            report(code: $code) {
+            reports(guildName: $guildName. guildServerSlug: $guildServerSlug, serverRegion: "us") {
                 fights(difficulty: $difficulty) {
                     id
                     name
+                }
+            }
+        }
+    }
+"""
+
+GUILD_QUERY = """
+    query($guildName: String, $guildServerSlug: String){
+        reportData {
+            reports(guildName: $guildName, guildServerSlug: $guildServerSlug, guildServerRegion: "us", limit: 5) {
+                data {
+                    title
+                    guild {
+                        name
+                    }
+                    zone {
+                        id
+                        name
+                    }
                 }
             }
         }
