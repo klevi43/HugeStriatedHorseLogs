@@ -14,7 +14,7 @@ class WcAuthService:
         oauth_url = os.getenv("BASE_URL") + os.getenv("OAUTH_URI")
         async with aiohttp.ClientSession() as session:
             async with session.post(oauth_url, data=payload, auth=auth) as res:
-                if res.status is 200:
+                if res.status == 200:
                     json_data = await res.json()
                     access_token = json_data.get("access_token")
                     return access_token
