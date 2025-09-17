@@ -29,12 +29,15 @@ if __name__ == "__main__":
     
     @bot.command()
     async def show_commands(ctx):
-        await ctx.send("""!getLog => fetches log and returns it in chat\n\n!getLogSendToDm => fetches log and sends it to you as a dm""")
+        await ctx.send("""!get_log => fetches log and returns it in chat\n\n!getLogSendToDm => fetches log and sends it to you as a dm""")
     
     @bot.tree.command(name="get_log")
     async def get_log(interaction: discord.Interaction):
-        await interaction.response.send_modal(RaidLogFormModal())
+        raid_log_form_modal = RaidLogFormModal()
+        await interaction.response.send_modal(raid_log_form_modal)
     
+    async def get_log_send_to_dm():
+        pass
     #we use the token to get the bot here
     bot.run(token)
 

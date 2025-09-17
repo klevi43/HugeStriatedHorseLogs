@@ -1,0 +1,23 @@
+import requests 
+import os
+import json
+import aiohttp, asyncio
+from aiohttp import BasicAuth
+class WcAuthService:
+    async def getAccessToken(self):
+        client_id = os.getenv("WC_CLIENT_ID")
+        client_pwd = os.getenv("WC_CLIENT_PWD")
+        payload = {"grant_type": "client_credentials"}
+        print(client_id)
+        print(client_pwd)
+        auth = BasicAuth(client_id, client_pwd)
+        oauth_url = os.getenv("BASE_URL") + os.getenv("OAUTH_URI")
+        async with aiohttp.ClientSession() as session:
+            async with session.post(oauth_url, data=payload, auth=auth) as res:
+                if res.status is 200:
+                    json_data = await res.json()
+                    access_token = json_data.get("access_token")
+                    return access_token
+                else:
+                    print(f"Failed to retrieve access token. \n Status: {res.status()}")
+                    return None
