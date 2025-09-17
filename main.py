@@ -4,19 +4,24 @@ import logging
 from dotenv import load_dotenv
 import os
 
+from modals.raidLogFormModal import RaidLogFormModal
+
 
 if __name__ == "__main__":
     load_dotenv()
     token = os.getenv("DISCORD_TOKEN")
+    guild_id = os.getenv("GUILD_ID")
     intents = discord.Intents.default()
     intents.message_content = True
     intents.members = True
     
-    
     bot = commands.Bot(command_prefix="!", intents=intents)
+    
     @bot.event
     async def on_ready():
-        print(f"Ready to go in ,  {bot.user.name}")
+        guild = discord.Object(id=guild_id)
+        await bot.tree.sync(guild=guild)
+        print("Bot ready and commands synced.")
         
     @bot.event
     async def on_member_join(member): 
@@ -24,16 +29,13 @@ if __name__ == "__main__":
     
     @bot.command()
     async def show_commands(ctx):
-        await ctx.send("""!get_log => fetches log and returns it in chat\n\n!get_log_for_me => fetches log and sends it to you as a dm""")
-    @bot.command()
-    async def get_log(ctx):
-        await ctx.send(f"Showing the log form for {ctx.author.mention}")
+        await ctx.send("""!getLog => fetches log and returns it in chat\n\n!getLogSendToDm => fetches log and sends it to you as a dm""")
     
-    @bot.command()
-    async def get_log_for_me(ctx):
-        await ctx.author.send(f"Here is the log form for {ctx.author.mention}")
-
+    @bot.tree.command(name="get_log")
+    async def get_log(interaction: discord.Interaction):
+        await interaction.response.send_modal(RaidLogFormModal())
+    
     #we use the token to get the bot here
-    bot.run(token, log_handler=handler, log_level=logging.DEBUG)
+    bot.run(token)
 
     
