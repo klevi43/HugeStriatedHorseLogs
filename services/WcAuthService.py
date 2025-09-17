@@ -8,8 +8,6 @@ class WcAuthService:
         client_id = os.getenv("WC_CLIENT_ID")
         client_pwd = os.getenv("WC_CLIENT_PWD")
         payload = {"grant_type": "client_credentials"}
-        print(client_id)
-        print(client_pwd)
         auth = BasicAuth(client_id, client_pwd)
         oauth_url = os.getenv("BASE_URL") + os.getenv("OAUTH_URI")
         async with aiohttp.ClientSession() as session:
