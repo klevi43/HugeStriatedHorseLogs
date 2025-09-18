@@ -2,18 +2,18 @@ import discord
 from discord.ext import commands
 import logging
 from dotenv import load_dotenv
-import os
-
+import os, aiohttp
+from containers.container import log_service, session
 from modals.raidLogFormModal import RaidLogFormModal
 
-
-if __name__ == "__main__":
+def main():
     load_dotenv()
     token = os.getenv("DISCORD_TOKEN")
     guild_id = os.getenv("GUILD_ID")
     intents = discord.Intents.default()
     intents.message_content = True
     intents.members = True
+    public_api_url = os.getenv("BASE_URL") + os.getenv("PUBLIC_DATA_URI")
     
     bot = commands.Bot(command_prefix="!", intents=intents)
     
@@ -36,9 +36,16 @@ if __name__ == "__main__":
         raid_log_form_modal = RaidLogFormModal()
         await interaction.response.send_modal(raid_log_form_modal)
     
+    @bot.tree.command(name="get_last_raid_log")
+    async def get_last_raid_log(interaction: discord.Interaction):
+        log_service.get_last_guild_raid_log("abc")
+    
+    
     async def get_log_send_to_dm():
         pass
     #we use the token to get the bot here
     bot.run(token)
-
+    
+if __name__ == "__main__":
+    main()
     

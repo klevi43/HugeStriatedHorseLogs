@@ -1,7 +1,7 @@
 import discord
 from discord.ui import Modal, TextInput
 from services.WcAuthService import WcAuthService
-from services.RaidLogService import RaidLogService
+from services.LogService import LogService
 from constants.constants import REPORT_CODE, NORMAL_DIFFICULTY
 class RaidLogFormModal(Modal, title="Get Log For Raid"):
     
@@ -11,7 +11,7 @@ class RaidLogFormModal(Modal, title="Get Log For Raid"):
     
     async def on_submit(self, interaction: discord.Interaction):
         auth_service = WcAuthService()
-        rl_service = RaidLogService()
+        rl_service = LogService()
         access_token = await auth_service.getAccessToken()
         if access_token:
             res = await rl_service.get_guild_raid_logs(access_token, { "guildName": self.guild_name.value, "guildServerSlug": self.guild_server_slug.value})
