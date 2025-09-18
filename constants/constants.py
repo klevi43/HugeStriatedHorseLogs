@@ -44,7 +44,7 @@ GET_LAST_RAID_LOG_QUERY = """
         reportData {
             reports(guildName: "NinetyNineParse", guildServerSlug: "Sargeras", guildServerRegion: "us", limit: 1) {
                 data {
-                    table(fightIDs: $fightIDs, killType: Encounters, dataType: DamageDone) 
+                    rankings(fightIDs: $fightIDs, playerMetric: dps) 
                 }
             }
         }

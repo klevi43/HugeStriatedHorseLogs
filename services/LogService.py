@@ -30,7 +30,13 @@ class LogService:
                 damage_query = {"query": GET_LAST_RAID_LOG_QUERY, "variables": {"fightIDs": fight_id_list}}
                 damage_res = await session.post(public_api_url, headers=headers, json=damage_query)
                 data = await damage_res.json()
-                table = data["data"]["reportData"]["reports"]["data"][0]["table"]
+                print(data["data"]["reportData"]["reports"]["data"][0]["rankings"]["data"][0].get("roles"))
+                boss_data = self._extract_json_data(data).get("encounter")
+                tank_data = self._extract_json_data(data).get("roles").get("tanks")
+                dps_data = self._extract_json_data(data).get("roles").get("dps")
+                healer_data = self._extract_json_data(data).get("roles").get("healers")
+                #table = data["data"]["reportData"]["reports"]["data"][0]["table"]
                 
-                return 0;
-        
+                return [boss_data, tank_data, healer_data]
+    def _extract_json_data(self, data):
+        return data["data"]["reportData"]["reports"]["data"][0]["rankings"]["data"][0]
