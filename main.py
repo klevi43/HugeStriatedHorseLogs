@@ -3,7 +3,7 @@ from discord.ext import commands
 import logging
 from dotenv import load_dotenv
 import os, aiohttp
-from containers.container import log_service, session
+from containers.container import log_service, wc_auth_service
 from modals.raidLogFormModal import RaidLogFormModal
 
 def main():
@@ -13,14 +13,12 @@ def main():
     intents = discord.Intents.default()
     intents.message_content = True
     intents.members = True
-    public_api_url = os.getenv("BASE_URL") + os.getenv("PUBLIC_DATA_URI")
-    
+      
     bot = commands.Bot(command_prefix="!", intents=intents)
     
     @bot.event
     async def on_ready():
-        guild = discord.Object(id=guild_id)
-        await bot.tree.sync(guild=guild)
+        await bot.tree.sync()
         print("Bot ready and commands synced.")
         
     @bot.event
@@ -29,7 +27,7 @@ def main():
     
     @bot.command()
     async def show_commands(ctx):
-        await ctx.send("""!get_log => fetches log and returns it in chat\n\n!getLogSendToDm => fetches log and sends it to you as a dm""")
+        await ctx.send("""!get_log_blorp => fetches log and returns it in chat\n\n!getLogSendToDm => fetches log and sends it to you as a dm""")
     
     @bot.tree.command(name="get_log")
     async def get_log(interaction: discord.Interaction):
@@ -38,8 +36,10 @@ def main():
     
     @bot.tree.command(name="get_last_raid_log")
     async def get_last_raid_log(interaction: discord.Interaction):
-        log_service.get_last_guild_raid_log("abc")
-    
+        await interaction.response.defer()
+        token = await wc_auth_service.getAccessToken()
+        res = await log_service.get_last_guild_raid_log(token)
+        await interaction.followup.send(res)
     
     async def get_log_send_to_dm():
         pass

@@ -36,6 +36,34 @@ GUILD_QUERY = """
         }
     }
 """
+
+# current goal: get dps for entire raid
+#enums don't go in quotes
+GET_LAST_RAID_LOG_QUERY = """
+    query($fightIDs: [Int]!){
+        reportData {
+            reports(guildName: "NinetyNineParse", guildServerSlug: "Sargeras", guildServerRegion: "us", limit: 1) {
+                data {
+                    table(fightIDs: $fightIDs, killType: Encounters, dataType: DamageDone) 
+                }
+            }
+        }
+    }
+"""
+
+GET_FIGHT_IDS_QUERY = """
+    {
+        reportData {
+            reports(guildName: "NinetyNineParse", guildServerSlug: "Sargeras", guildServerRegion: "us", limit: 1) {
+                data {
+                    fights (killType: Encounters){
+                        id
+                    }
+                }
+            }
+        }
+    }
+"""
 # report(code:{REPORT_CODE}, difficulty:{NORMAL_DIFFICULTY}) {{
         #     id
         #     name
